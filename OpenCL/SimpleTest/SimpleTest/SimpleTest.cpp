@@ -51,21 +51,34 @@ bool LoadString(const std::string & fileName, std::string & data)
 #define CL_STATUS_CKECK()\
 	if(status != CL_SUCCESS)\
 	{\
-		printf("error %s %d\n", __FILE__, __LINE__);\
+		printf("error %s %d %d\n", __FILE__, __LINE__, status);\
 		exit(1);\
 	}
 
 
-int main()
+int main(int argc, char *argv[])
 {
 	cl_uint numPlatforms;
 	cl_platform_id platform = NULL;
 	cl_int status;
+
+	int platformIndex = 0;
+
+	if(argc > 0)
+	{
+		platformIndex = atoi(argv[0]);
+	}
+	
 	
 	status = clGetPlatformIDs(0, NULL, &numPlatforms);
 	CL_STATUS_CKECK();
 
 	printf("numPlatforms %d\n", numPlatforms);
+
+	if(platformIndex >= (int)numPlatforms)
+	{
+		platformIndex = 0;
+	}
 
 	static cl_platform_id platforms[512];
 
@@ -73,7 +86,7 @@ int main()
 	CL_STATUS_CKECK();
 
 	char pbuf[100];
-	status = clGetPlatformInfo(platforms[0],
+	status = clGetPlatformInfo(platforms[platformIndex],
 					CL_PLATFORM_VENDOR,
 					sizeof(pbuf),
 					pbuf,
@@ -81,7 +94,7 @@ int main()
 	CL_STATUS_CKECK();
 	printf("OpenCL platform %s\n", pbuf);
 
-	platform = platforms[0];
+	platform = platforms[platformIndex];
 
 	cl_device_id devices[32];
 	cl_uint deviceCount;
@@ -234,11 +247,26 @@ int main()
 	program = clCreateProgramWithSource(context, 1, (const char **)&source, &slen, &status);
 	CL_STATUS_CKECK();
 
-	clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+	status = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+	CL_STATUS_CKECK();
 
 	//
 	static cl_kernel kernel;
 	kernel = clCreateKernel(program, "Count", &status);
+	if(status != CL_SUCCESS)
+	{
+		std::vector<char> str;
+		str.resize(0x10000);
+		clGetProgramBuildInfo(program, devices[0],
+			CL_PROGRAM_BUILD_LOG,
+			str.size(),
+			&str[0],
+			NULL);
+		
+		printf("error log\n%s\n", &str[0]);
+		printf("error %s %d\n", __FILE__, __LINE__);
+		exit(1);
+	}
 	CL_STATUS_CKECK();
 
 
