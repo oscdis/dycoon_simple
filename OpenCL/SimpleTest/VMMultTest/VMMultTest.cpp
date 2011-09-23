@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
 	status = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 32, devices, &deviceCount);
 	CL_STATUS_CKECK();
 
+	printf("OpenCL device Count %d\n", (int)deviceCount);
 	printf("OpenCL device ID %d\n", (int)devices[0]);
 
 	cl_device_type type = 0;
@@ -203,7 +204,7 @@ int main(int argc, char *argv[])
 				&status);
 	CL_STATUS_CKECK();
 
-	size_t jobSize = 10000;
+	size_t jobSize = 5000;
 	size_t globalWorkSize = asz / jobSize;
 
 	static cl_mem r;
@@ -327,7 +328,7 @@ int main(int argc, char *argv[])
 	//
 	
 	size_t localWorkSize;
-	localWorkSize = 8;
+	localWorkSize = 16;
 	status = clEnqueueNDRangeKernel(commandQueue, kernel, 1, NULL, &globalWorkSize, &localWorkSize, 0, NULL, &eve);
 	CL_STATUS_CKECK();
 

@@ -32,7 +32,7 @@ __kernel void Mult(__global const Vec3 * a, __global Mat4x4 * m, __global Vec3 *
 	int gid = get_global_id(0);
 	__local int i;
 	__local int isz;
-	int o = gid * 10000;
+	int o = gid * 5000;
 	__local Vec3 sumR;
 	__local Vec3 ta;
 	sumR.x = 0.0f;
@@ -48,7 +48,7 @@ __kernel void Mult(__global const Vec3 * a, __global Mat4x4 * m, __global Vec3 *
 	//m1.x = m->_12; m1.y = m->_22; m1.z = m->_32; m1.w = m->_42;
 	//m2.x = m->_13; m2.y = m->_23; m2.z = m->_33; m2.w = m->_43;
 	
-	isz = o + 10000;
+	isz = o + 5000;
 	for(i = o ; i <isz ; i++)
 	//for(i = o ; i <isz ; i += 4)
 	{
