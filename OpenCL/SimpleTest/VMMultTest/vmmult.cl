@@ -70,5 +70,7 @@ __kernel void Mult(__global const Vec3 * a, __global Mat4x4 * m, __global Vec3 *
 		sumR.y += a[i].x * m->_12 + a[i].y * m->_22 + a[i].z * m->_32 + m->_42;
 		sumR.z += a[i].x * m->_13 + a[i].y * m->_23 + a[i].z * m->_33 + m->_43;
 	}
-	r[gid] = sumR;
+	r[gid].x = sumR.x;
+	r[gid].y = sumR.y;
+	r[gid].z = sumR.z;
 }

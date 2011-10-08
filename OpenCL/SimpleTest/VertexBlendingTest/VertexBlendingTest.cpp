@@ -78,6 +78,13 @@ bool LoadString(const std::string & fileName, std::string & data)
 	}
 
 
+inline void VMMult(const Vec3 * a, const Mat4x4 * m, Vec3 * r)
+{
+	r->x = (a->x * m->_11 + a->y * m->_21 + a->z * m->_31 + m->_41);
+	r->y = (a->x * m->_12 + a->y * m->_22 + a->z * m->_32 + m->_42);
+	r->z = (a->x * m->_13 + a->y * m->_23 + a->z * m->_33 + m->_43);
+}
+
 int main(int argc, char *argv[])
 {
 	cl_uint numPlatforms;
@@ -198,7 +205,7 @@ int main(int argc, char *argv[])
 	m = clCreateBuffer(
 				context,
 				CL_MEM_WRITE_ONLY,
-				sizeof(Mat4x4),
+				sizeof(Mat4x4) * 4,
 				NULL,
 				&status);
 	CL_STATUS_CKECK();
@@ -229,12 +236,27 @@ int main(int argc, char *argv[])
 		sourceA[i].z = sinf(i * 2.0f + 0.5f);
 	}
 
-	Mat4x4 ma;
+	Mat4x4 ma[4];
 
-	ma._11 = cosf(0.5f); ma._12 = sinf(0.5f); ma._13 = sinf(0.5f); ma._14 = 0.0f;
-	ma._21 = -sinf(0.5f); ma._22 = cosf(0.5f); ma._23 = sinf(0.5f); ma._24 = 0.0f;
-	ma._31 = cosf(0.5f); ma._32 = sinf(0.5f); ma._33 = sinf(0.5f); ma._34 = 0.0f;
-	ma._41 = 0.1f; ma._42 = 0.2f; ma._43 = 0.3f; ma._44 = 1.0f;
+	ma[0]._11 = cosf(0.5f); ma[0]._12 = sinf(0.5f); ma[0]._13 = sinf(0.5f); ma[0]._14 = 0.0f;
+	ma[0]._21 = -sinf(0.5f); ma[0]._22 = cosf(0.5f); ma[0]._23 = sinf(0.5f); ma[0]._24 = 0.0f;
+	ma[0]._31 = cosf(0.5f); ma[0]._32 = sinf(0.5f); ma[0]._33 = sinf(0.5f); ma[0]._34 = 0.0f;
+	ma[0]._41 = 0.1f; ma[0]._42 = 0.2f; ma[0]._43 = 0.3f; ma[0]._44 = 1.0f;
+
+	ma[1]._11 = cosf(0.5f); ma[1]._12 = -sinf(0.5f); ma[1]._13 = -sinf(0.5f); ma[1]._14 = 0.0f;
+	ma[1]._21 = sinf(0.5f); ma[1]._22 = cosf(0.5f); ma[1]._23 = -sinf(0.5f); ma[1]._24 = 0.0f;
+	ma[1]._31 = -cosf(0.5f); ma[1]._32 = -sinf(0.5f); ma[1]._33 = -sinf(0.5f); ma[1]._34 = 0.0f;
+	ma[1]._41 = 0.1f; ma[1]._42 = 0.2f; ma[1]._43 = 0.3f; ma[1]._44 = 1.0f;
+
+	ma[2]._11 = cosf(0.5f); ma[2]._12 = sinf(0.5f); ma[2]._13 = sinf(0.5f); ma[2]._14 = 0.0f;
+	ma[2]._21 = -sinf(0.5f); ma[2]._22 = cosf(0.5f); ma[2]._23 = sinf(0.5f); ma[2]._24 = 0.0f;
+	ma[2]._31 = cosf(0.5f); ma[2]._32 = sinf(0.5f); ma[2]._33 = sinf(0.5f); ma[2]._34 = 0.0f;
+	ma[2]._41 = -0.1f; ma[2]._42 = -0.2f; ma[2]._43 = -0.3f; ma[2]._44 = 1.0f;
+
+	ma[3]._11 = cosf(0.5f); ma[3]._12 = -sinf(0.5f); ma[3]._13 = -sinf(0.5f); ma[3]._14 = 0.0f;
+	ma[3]._21 = sinf(0.5f); ma[3]._22 = cosf(0.5f); ma[3]._23 = -sinf(0.5f); ma[3]._24 = 0.0f;
+	ma[3]._31 = -cosf(0.5f); ma[3]._32 = -sinf(0.5f); ma[3]._33 = -sinf(0.5f); ma[3]._34 = 0.0f;
+	ma[3]._41 = -0.1f; ma[3]._42 = -0.2f; ma[3]._43 = -0.3f; ma[3]._44 = 1.0f;
 
 	static Vec3 * dstR;
 	dstR = new Vec3[globalWorkSize]();
@@ -252,7 +274,7 @@ int main(int argc, char *argv[])
 	const char * source;
 
 	std::string str;
-	LoadString("vmmult.cl", str);
+	LoadString("vertexblending.cl", str);
 	source = str.c_str();
 
 	size_t slen = strlen(source);
@@ -260,6 +282,20 @@ int main(int argc, char *argv[])
 	CL_STATUS_CKECK();
 
 	status = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+	if(status != CL_SUCCESS)
+	{
+		std::vector<char> str;
+		str.resize(0x10000);
+		clGetProgramBuildInfo(program, devices[0],
+			CL_PROGRAM_BUILD_LOG,
+			str.size(),
+			&str[0],
+			NULL);
+		
+		printf("error log\n%s\n", &str[0]);
+		printf("error %s %d\n", __FILE__, __LINE__);
+		exit(1);
+	}
 	CL_STATUS_CKECK();
 
 	//
@@ -301,10 +337,12 @@ int main(int argc, char *argv[])
 
 	tm = timeGetTime();
 
-	status = clEnqueueWriteBuffer(commandQueue, a, CL_FALSE, 0, sizeof(Vec3) * asz, sourceA, 0, NULL, NULL);
+	status = clEnqueueWriteBuffer(commandQueue, a, CL_FALSE, 0, sizeof(Vec3) * asz, sourceA, 0, NULL, &eve);
 	CL_STATUS_CKECK();
 
-	status = clEnqueueWriteBuffer(commandQueue,m, CL_FALSE, 0, sizeof(Mat4x4), &ma, 0, NULL, &eve);
+	clWaitForEvents(1, &eve);
+
+	status = clEnqueueWriteBuffer(commandQueue, m, CL_FALSE, 0, sizeof(Mat4x4) * 4, ma, 0, NULL, &eve);
 	CL_STATUS_CKECK();
 
 	//status = clEnqueueTask(commandQueue, kernel, 0, NULL, NULL);
@@ -349,6 +387,8 @@ int main(int argc, char *argv[])
 	printf("OpenCL result\n");
 
 	Vec3 sumR;
+	Vec3 ta;
+	Vec3 tv;
 
 	sumR.x = 0.0f;
 	sumR.y = 0.0f;
@@ -381,9 +421,37 @@ int main(int argc, char *argv[])
 	isz = asz;
 	for(i = 0 ; i < isz ; i++)
 	{
-		sumR.x += sourceA[i].x * ma._11 + sourceA[i].y * ma._21 + sourceA[i].z * ma._31 + ma._41;
-		sumR.y += sourceA[i].x * ma._12 + sourceA[i].y * ma._22 + sourceA[i].z * ma._32 + ma._42;
-		sumR.z += sourceA[i].x * ma._13 + sourceA[i].y * ma._23 + sourceA[i].z * ma._33 + ma._43;
+		ta.x = 0.0;
+		ta.y = 0.0;
+		ta.z = 0.0;
+
+		VMMult(&sourceA[i], &ma[0], &tv);
+		ta.x += tv.x * 0.25f;
+		ta.y += tv.y * 0.25f;
+		ta.z += tv.z * 0.25f;
+
+		VMMult(&sourceA[i], &ma[1], &tv);
+		ta.x += tv.x * 0.25f;
+		ta.y += tv.y * 0.25f;
+		ta.z += tv.z * 0.25f;
+
+		VMMult(&sourceA[i], &ma[2], &tv);
+		ta.x += tv.x * 0.25f;
+		ta.y += tv.y * 0.25f;
+		ta.z += tv.z * 0.25f;
+
+		VMMult(&sourceA[i], &ma[3], &tv);
+		ta.x += tv.x * 0.25f;
+		ta.y += tv.y * 0.25f;
+		ta.z += tv.z * 0.25f;
+
+		sumR.x += ta.x;
+		sumR.y += ta.y;
+		sumR.z += ta.z;
+
+		//sumR.x += sourceA[i].x * ma._11 + sourceA[i].y * ma._21 + sourceA[i].z * ma._31 + ma._41;
+		//sumR.y += sourceA[i].x * ma._12 + sourceA[i].y * ma._22 + sourceA[i].z * ma._32 + ma._42;
+		//sumR.z += sourceA[i].x * ma._13 + sourceA[i].y * ma._23 + sourceA[i].z * ma._33 + ma._43;
 	}
 
 	printf("sumR.x = %f\n", sumR.x);

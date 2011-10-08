@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleTest", "SimpleTest\Si
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VMMultTest", "VMMultTest\VMMultTest.vcproj", "{56BD6DDB-FCBD-4622-93A3-7AA1513BD928}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VertexBlendingTest", "VertexBlendingTest\VertexBlendingTest.vcproj", "{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -29,6 +31,14 @@ Global
 		{56BD6DDB-FCBD-4622-93A3-7AA1513BD928}.Release|Win32.Build.0 = Release|Win32
 		{56BD6DDB-FCBD-4622-93A3-7AA1513BD928}.Release|x64.ActiveCfg = Release|x64
 		{56BD6DDB-FCBD-4622-93A3-7AA1513BD928}.Release|x64.Build.0 = Release|x64
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Debug|Win32.Build.0 = Debug|Win32
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Debug|x64.ActiveCfg = Debug|x64
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Debug|x64.Build.0 = Debug|x64
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Release|Win32.ActiveCfg = Release|Win32
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Release|Win32.Build.0 = Release|Win32
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Release|x64.ActiveCfg = Release|x64
+		{A9069D01-1A80-4CE3-9A68-9BF69EFA6AA9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

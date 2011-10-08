@@ -5,7 +5,6 @@
 #include <string.h>
 #include <math.h>
 
-// Jens's patch for MacOS
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
 #else
