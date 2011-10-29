@@ -3,7 +3,7 @@ __kernel void Count(const __global const int * a, __global int * ct0, __global i
 	int gid = get_global_id(0);
 	int i;
 	int isz;
-	int o = gid * 10000;
+	int o = gid * 5000;
 	int ct0t = 0;
 	int ct1t = 0;
 	
@@ -11,7 +11,7 @@ __kernel void Count(const __global const int * a, __global int * ct0, __global i
 	//ctt[0] = 0;
 	//ctt[1] = 0;
 	
-	isz = o + 10000;
+	isz = o + 5000;
 	for(i = o ; i <isz ; i++)
 	{
 		//ctt[(a[i] % 2)]++;
