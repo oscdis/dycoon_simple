@@ -292,6 +292,7 @@ int main(int argc, char *argv[])
 			&str[0],
 			NULL);
 		
+		printf("status %d\n", (int)status);
 		printf("error log\n%s\n", &str[0]);
 		printf("error %s %d\n", __FILE__, __LINE__);
 		exit(1);

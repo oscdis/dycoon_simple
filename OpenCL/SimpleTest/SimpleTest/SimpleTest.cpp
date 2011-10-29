@@ -37,6 +37,8 @@ bool LoadString(const std::string & fileName, std::string & data)
 	size_t fileSize = (size_t)f.seekg(0, std::ios::end).tellg();
 	f.seekg(0, std::ios::beg);
 
+	//printf("fileSize %d\n", (int)fileSize);
+
 	std::vector<char> d;
 	d.resize(fileSize + 1);
 	f.read(&d[0], fileSize);
@@ -243,10 +245,27 @@ int main(int argc, char *argv[])
 	source = str.c_str();
 
 	size_t slen = strlen(source);
+	//printf("slen %d\n", (int)slen);
+	//printf("str.c_str() %s\n", source);
 	program = clCreateProgramWithSource(context, 1, (const char **)&source, &slen, &status);
 	CL_STATUS_CKECK();
 
 	status = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+	if(status != CL_SUCCESS)
+	{
+		std::vector<char> str;
+		str.resize(0x10000);
+		clGetProgramBuildInfo(program, devices[0],
+			CL_PROGRAM_BUILD_LOG,
+			str.size(),
+			&str[0],
+			NULL);
+		
+		printf("status %d\n", status);
+		printf("error log\n%s\n", &str[0]);
+		printf("error %s %d\n", __FILE__, __LINE__);
+		exit(1);
+	}
 	CL_STATUS_CKECK();
 
 	//

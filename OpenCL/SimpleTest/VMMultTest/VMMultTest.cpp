@@ -259,7 +259,22 @@ int main(int argc, char *argv[])
 	program = clCreateProgramWithSource(context, 1, (const char **)&source, &slen, &status);
 	CL_STATUS_CKECK();
 
-	status = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+	status = clBuildProgram(program, 0, NULL, NULL /*"-cl-opt-disable"*/, NULL, NULL);
+	if(status != CL_SUCCESS)
+	{
+		std::vector<char> str;
+		str.resize(0x10000);
+		clGetProgramBuildInfo(program, devices[0],
+			CL_PROGRAM_BUILD_LOG,
+			str.size(),
+			&str[0],
+			NULL);
+		
+		printf("status %d\n", (int)status);
+		printf("error log\n%s\n", &str[0]);
+		printf("error %s %d\n", __FILE__, __LINE__);
+		exit(1);
+	}
 	CL_STATUS_CKECK();
 
 	//

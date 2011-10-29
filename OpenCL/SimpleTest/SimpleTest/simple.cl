@@ -7,14 +7,9 @@ __kernel void Count(const __global const int * a, __global int * ct0, __global i
 	int ct0t = 0;
 	int ct1t = 0;
 	
-	//int ctt[2];
-	//ctt[0] = 0;
-	//ctt[1] = 0;
-	
 	isz = o + 5000;
 	for(i = o ; i <isz ; i++)
 	{
-		//ctt[(a[i] % 2)]++;
 		if((a[i] % 2) == 0)
 		{
 			ct0t++;
