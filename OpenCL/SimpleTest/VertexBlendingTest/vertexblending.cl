@@ -36,16 +36,19 @@ void VMMult(__global const Vec3 * a, __global const Mat4x4 * m, __local Vec3 * r
 
 __kernel void Mult(__global const Vec3 * a, __global const Mat4x4 * m, __global Vec3 * r)
 {
-	int gid = get_global_id(0);
+	__local int gid;
 	__local int i;
 	__local int isz;
-	int o = gid * 5000;
+	__local int o;
 	__local Vec3 sumR;
 	__local Vec3 ta;
 	__local Vec3 tv;
 	sumR.x = 0.0f;
 	sumR.y = 0.0f;
 	sumR.z = 0.0f;
+	
+	gid = get_global_id(0);
+	o = gid * 5000;
 	
 	isz = o + 5000;
 	for(i = o ; i < isz ; i++)

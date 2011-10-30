@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 	program = clCreateProgramWithSource(context, 1, (const char **)&source, &slen, &status);
 	CL_STATUS_CKECK();
 
-	status = clBuildProgram(program, 0, NULL, NULL /*"-cl-opt-disable"*/, NULL, NULL);
+	status = clBuildProgram(program, 0, NULL, NULL/*"-cl-opt-disable"*/, NULL, NULL);
 	if(status != CL_SUCCESS)
 	{
 		std::vector<char> str;

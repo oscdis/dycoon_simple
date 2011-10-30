@@ -1,12 +1,12 @@
 numPlatforms 1
 OpenCL platform NVIDIA Corporation
-OpenCL device ID 45400688
+OpenCL device ID 46056048
 OpenCL device type 4
 Write Buffer time = 177
 OpenCL result
 ct0 = 50000000
 ct1 = 50000000
-time = 126
+time = 127
 CPU result
 ct0 = 50000000
 ct1 = 50000000
