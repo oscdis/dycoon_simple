@@ -1,0 +1,18 @@
+numPlatforms 1
+OpenCL platform NVIDIA Corporation
+OpenCL device Count 1
+OpenCL device ID 44679792
+OpenCL device type 4
+OpenCL max compute units 2
+Write Buffer time = 54
+Run time = 55
+OpenCL result
+sumR.x = 1.166963
+sumR.y = 1.338359
+sumR.z = -0.000004
+read time = 0
+CPU result
+sumR.x = 1.177777
+sumR.y = 1.330386
+sumR.z = 0.000013
+time = 153

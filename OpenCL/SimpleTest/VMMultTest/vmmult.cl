@@ -50,10 +50,10 @@ __kernel void Mult(__global const Vec3 * a, __global Mat4x4 * m, __global Vec3 *
 	isz = o + 5000;
 	for(i = o ; i < isz ; i++)
 	{
-		VMMult(&a[i], &m[0], &tv);
-		ta.x += tv.x;
-		ta.y += tv.y;
-		ta.z += tv.z;
+		VMMult(&a[i], m, &tv);
+		sumR.x += tv.x;
+		sumR.y += tv.y;
+		sumR.z += tv.z;
 	}
 	r[gid].x = sumR.x;
 	r[gid].y = sumR.y;
