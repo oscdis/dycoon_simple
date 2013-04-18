@@ -1,0 +1,5 @@
+file "SimpleTest" => "SimpleTest.cpp" do |t|
+  sh "g++ -o #{t.name} #{t.prerequisites.join(' ')} -framework openCL"
+end
+
+task :default => "SimpleTest"

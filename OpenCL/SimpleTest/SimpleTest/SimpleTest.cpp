@@ -15,15 +15,24 @@
 #include <fstream>
 #include <vector>
 
-#include <windows.h>
+//#include <windows.h>
 
-#pragma comment( lib, "winmm.lib" )
+//#pragma comment( lib, "winmm.lib" )
 
 typedef struct{
 	float x;
 	float y;
 	float z;
 } Vec3;
+
+typedef long DWORD;
+#include <sys/time.h>
+
+long timeGetTime(){
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 
 bool LoadString(const std::string & fileName, std::string & data)
 {
@@ -102,7 +111,7 @@ int main(int argc, char *argv[])
 	status = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 32, devices, &deviceCount);
 	CL_STATUS_CKECK();
 
-	printf("OpenCL device ID %d\n", (int)devices[0]);
+	//	printf("OpenCL device ID %d\n", (int)devices[0]);
 
 	cl_device_type type = 0;
 	status = clGetDeviceInfo(devices[0],
